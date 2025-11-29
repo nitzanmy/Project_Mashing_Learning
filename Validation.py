@@ -6,15 +6,14 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 from pathlib import Path
 
-# --- Constants & Configuration ---
+#  Constants & Configuration 
 INPUT_FILE = "selected_features.csv" 
-TEST_SIZE_RATIO = 0.20  # 20% validation set (Holdout split)
-SEED = 42               # For reproducibility (required by assignment)
+TEST_SIZE_RATIO = 0.20  # 20% validation set 
+SEED = 42               # For reproducibility
 
 def perform_validation(df):
     """
-    Implements Holdout Validation, trains a Logistic Regression model, 
-    and evaluates performance.
+    Implements Holdout Validation, trains a Logistic Regression model, and evaluates performance.
     """
     print(f"Starting Holdout Validation (Train/Test Split: {1 - TEST_SIZE_RATIO}/{TEST_SIZE_RATIO})...")
     
@@ -27,7 +26,6 @@ def perform_validation(df):
     y = df['Label_Encoded'].values
     
     # 2. Split Data (Holdout Validation)
-    # Ref: Lecture 3, Slide 45 (Holdout validation - splitting data)
     X_train, X_validation, y_train, y_validation = train_test_split(
         X, y, 
         test_size=TEST_SIZE_RATIO, 
@@ -39,7 +37,7 @@ def perform_validation(df):
     print(f"Validation set size: {len(X_validation)} samples")
     
     # 3. Model Training
-    # We use Logistic Regression as required by the assignment.
+    # Logistic Regression Model
     model = LogisticRegression(max_iter=1000, random_state=SEED)
     model.fit(X_train, y_train)
     
@@ -47,14 +45,13 @@ def perform_validation(df):
     y_pred = model.predict(X_validation)
     
     # 5. Measure Performance (Metric)
-    # Ref: Lecture 3, Slide 68 (Accuracy)
     accuracy = accuracy_score(y_validation, y_pred)
     
-    print("\n--- Validation Results ---")
+    print("\n Validation Results ")
     print(f"Chosen Metric: Accuracy")
     print(f"Overall Accuracy: {accuracy:.4f}")
     
-    # Additional report for better insights (for the report)
+    # Additional report for better insights
     print("\nDetailed Classification Report:")
     print(classification_report(y_validation, y_pred, target_names=le.classes_))
     
@@ -65,9 +62,6 @@ def main():
     np.random.seed(SEED)
     
     input_path = Path(INPUT_FILE)
-    if not input_path.exists():
-        print(f"Error: {INPUT_FILE} not found. Please run feature_selection.py first.")
-        return
 
     df = pd.read_csv(input_path)
     
